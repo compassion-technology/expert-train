@@ -12,7 +12,7 @@ import (
 func newHandler() (*handler, error) {
 	conn, ok := os.LookupEnv("CONN")
 	if !ok {
-		return nil, errors.New("no CONN set")
+		return nil, errors.New("missing configuration parameter")
 	}
 	db, err := setup(conn)
 	if err != nil {
@@ -31,13 +31,17 @@ type handler struct {
 }
 
 func (h *handler) storeMessage(c echo.Context) error {
-	var msg Message
-	err := c.Bind(&msg)
+	rawMSG := make(map[string]interface{})
+	err := c.Bind(&rawMSG)
 	if err != nil {
 		return err
 	}
 
-	err = h.svc.submitMessage(&msg)
+	// rawMSG["From"] = c.Param("fromID")
+	c.Logger().Debugj(map[string]interface{}{
+		"rawMSG": rawMSG,
+	})
+	msg, err := h.svc.submitMessage(rawMSG)
 	if err != nil {
 		return err
 	}
