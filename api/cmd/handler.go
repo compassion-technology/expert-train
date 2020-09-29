@@ -37,10 +37,6 @@ func (h *handler) storeMessage(c echo.Context) error {
 		return err
 	}
 
-	// rawMSG["From"] = c.Param("fromID")
-	c.Logger().Debugj(map[string]interface{}{
-		"rawMSG": rawMSG,
-	})
 	msg, err := h.svc.submitMessage(rawMSG)
 	if err != nil {
 		return err

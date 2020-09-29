@@ -12,3 +12,8 @@ type Message struct {
 	ContentURL string                 `json:"content_url"`
 	Created    time.Time              `json:"created"`
 }
+
+type Content struct {
+	Data []byte `json:"data"`
+	Type string `json:"type"`
+}
