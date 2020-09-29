@@ -12,7 +12,9 @@ var messages = map[int]Message{
 		ID:   1,
 		To:   "01234567",
 		From: "09876543",
-		Text: "This is a test message.",
+		Message: map[string]interface{}{
+			"english": "This is a test message.",
+		},
 	},
 }
 

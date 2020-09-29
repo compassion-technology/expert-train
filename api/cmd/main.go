@@ -18,7 +18,7 @@ func main() {
 
 	e.Use(middleware.Logger())
 
-	user := e.Group("user/:fromID")
+	user := e.Group("user/:from")
 	{
 		user.POST("/message", h.storeMessage)
 		user.GET("/message/:id", h.retrieveContent)
