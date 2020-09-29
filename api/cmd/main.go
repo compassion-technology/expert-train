@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -9,14 +11,23 @@ func main() {
 	e := echo.New()
 	e.Debug = true
 
+	h, err := newHandler()
+	if err != nil {
+		e.Logger.Panic(err)
+	}
+
 	e.Use(middleware.Logger())
 
 	user := e.Group("user/:fromID")
 	{
-		user.POST("/message", storeMessage)
-		user.GET("/message/:id", retrieveContent)
-		user.GET("/messages", retrieveMessages)
+		user.POST("/message", h.storeMessage)
+		user.GET("/message/:id", h.retrieveContent)
+		user.GET("/messages", h.retrieveMessages)
 	}
 
-	e.Logger.Panic(e.Start(":8080"))
+	port, ok := os.LookupEnv("PORT")
+	if !ok {
+		port = ":80"
+	}
+	e.Logger.Panic(e.Start(port))
 }
