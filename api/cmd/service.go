@@ -1,44 +1,40 @@
 package main
 
 import (
-	"errors"
 	"time"
+
+	"github.com/go-pg/pg/v9"
 )
 
-var messages = map[int]Message{
-	1: Message{
-		ID:   1,
-		To:   "01234567",
-		From: "09876543",
-		Text: "This is a test message.",
-	},
+type service interface {
+	getMessage(id int) (Message, error)
+	getMessages(globalID string) ([]Message, error)
+	submitMessage(msg *Message) error
 }
 
-func getMessage(id int) (Message, error) {
-	msg, ok := messages[id]
-	if !ok {
-		return Message{}, errors.New("not found")
+type realService struct {
+	db *pg.DB
+}
+
+func (s *realService) getMessage(id int) (Message, error) {
+	msg := Message{ID: id}
+	err := s.db.Select(&msg)
+	if err != nil {
+		return Message{}, err
 	}
 	return msg, nil
 }
-
-func getMessages(globalID string) ([]Message, error) {
-	msgs := make([]Message, 0)
-	for _, v := range messages {
-		if v.To == globalID || v.From == globalID {
-			msgs = append(msgs, v)
-		}
+func (s *realService) getMessages(globalID string) ([]Message, error) {
+	s.db.AddQueryHook(DBLogger{})
+	var msgs []Message
+	_, err := s.db.Query(&msgs, "SELECT * FROM space.messages WHERE space.messages.from=? OR space.messages.to=?", globalID, globalID)
+	if err != nil {
+		return nil, err
 	}
+
 	return msgs, nil
 }
-
-func putMessage(msg *Message) error {
-	if msg == nil {
-		return errors.New("stop sending me garbage")
-	}
-	nextID := len(messages) + 1
-	msg.ID = nextID
+func (s *realService) submitMessage(msg *Message) error {
 	msg.Created = time.Now().UTC()
-	messages[nextID] = *msg
-	return nil
+	return s.db.Insert(msg)
 }
