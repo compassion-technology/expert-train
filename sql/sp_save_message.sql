@@ -28,7 +28,11 @@ BEGIN
 		_group_id,
 		_content_url,
 		_message
-	); 
+		)
+
+	RETURNING SPACE.id
+	; 
+
 
 END
 $BODY$;

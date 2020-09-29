@@ -1,11 +1,15 @@
 package main
 
 import (
+	"net/http"
 	"os"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
+
+var startTime = time.Now()
 
 func main() {
 	e := echo.New()
@@ -16,9 +20,12 @@ func main() {
 		e.Logger.Panic(err)
 	}
 
+	e.Use(middleware.CORS())
 	e.Use(middleware.Logger())
 
-	user := e.Group("user/:fromID")
+	e.GET("/", healthCheck)
+
+	user := e.Group("user/:from")
 	{
 		user.POST("/message", h.storeMessage)
 		user.GET("/message/:id", h.retrieveContent)
@@ -30,4 +37,16 @@ func main() {
 		port = ":80"
 	}
 	e.Logger.Panic(e.Start(port))
+}
+
+type health struct {
+	Start  time.Time
+	Uptime string
+}
+
+func healthCheck(c echo.Context) error {
+	return c.JSON(http.StatusOK, health{
+		Start:  startTime,
+		Uptime: time.Since(startTime).String(),
+	})
 }
