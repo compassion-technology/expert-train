@@ -57,6 +57,7 @@ func setup(connStr string) (*pg.DB, error) {
 	// if no @, strings.Index returns -1 (which we then +1 to get back to 0)
 	// if @ present, we get only the bit after it, if no @, we get the whole string.
 	log.Println("Connected to postgres database:", connStr[strings.Index(connStr, "@")+1:])
+	db.AddQueryHook(DBLogger{})
 	return db, nil
 }
 
