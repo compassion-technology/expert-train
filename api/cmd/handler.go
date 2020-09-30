@@ -75,3 +75,16 @@ func (h *handler) retrieveMessages(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, msgs)
 }
+
+func (h *handler) queryMessages(c echo.Context) error {
+	var req queryRequest
+	err := c.Bind(&req)
+	if err != nil {
+		return err
+	}
+	msgs, err := h.svc.query(req)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, msgs)
+}

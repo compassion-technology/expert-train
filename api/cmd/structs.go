@@ -17,3 +17,12 @@ type Content struct {
 	Data []byte `json:"data"`
 	Type string `json:"type"`
 }
+
+type queryRequest struct {
+	GroupID          *int    `query:"group"`
+	UserID           *string `query:"user"`
+	MinimumMessageID *int    `query:"min"`
+	MaximumMessageID *int    `query:"max"`
+	Skip             *int    `query:"skip"`
+	Take             *int    `query:"take"`
+}

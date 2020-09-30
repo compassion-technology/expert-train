@@ -18,6 +18,7 @@ type service interface {
 	getMessage(id int) (Message, error)
 	getMessages(globalID string) ([]Message, error)
 	submitMessage(msg map[string]interface{}) (Message, error)
+	query(req queryRequest) ([]Message, error)
 }
 
 type realService struct {
@@ -34,9 +35,8 @@ func (s *realService) getMessage(id int) (Message, error) {
 }
 
 func (s *realService) getMessages(globalID string) ([]Message, error) {
-	s.db.AddQueryHook(DBLogger{})
 	var msgs []Message
-	_, err := s.db.Query(&msgs, "SELECT * FROM space.messages WHERE space.messages.from=? OR space.messages.to=? ORDER BY created DESC", globalID, globalID)
+	_, err := s.db.Query(&msgs, `SELECT * FROM space.messages WHERE "from"=? OR "to"=? ORDER BY created DESC`, globalID, globalID)
 	if err != nil {
 		return nil, err
 	}
@@ -118,4 +118,41 @@ func storeContent(c *Content) (url string, e error) {
 		return "", fmt.Errorf("failed to upload file, %v", err)
 	}
 	return result.Location, nil
+}
+
+func (s *realService) query(req queryRequest) ([]Message, error) {
+	var msgs []Message
+	q := s.db.Model(&msgs)
+
+	if req.GroupID != nil {
+		q.Where("group_id=?", req.GroupID)
+	}
+
+	if req.UserID != nil {
+		q.Where(`"from"=? OR "to"=?`, req.UserID, req.UserID)
+	}
+
+	if req.MinimumMessageID != nil {
+		q.Where("id>=?", req.MinimumMessageID)
+	}
+
+	if req.MaximumMessageID != nil {
+		q.Where("id<=?", req.MaximumMessageID)
+	}
+
+	if req.Skip != nil {
+		q.Offset(*req.Skip)
+	}
+
+	if req.Take != nil {
+		q.Limit(*req.Take)
+	}
+
+	q.Order("id DESC")
+
+	err := q.Select(&msgs)
+	if err != nil {
+		return nil, err
+	}
+	return msgs, nil
 }

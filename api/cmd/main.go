@@ -31,6 +31,7 @@ func main() {
 		user.GET("/message/:id", h.retrieveContent)
 		user.GET("/messages", h.retrieveMessages)
 	}
+	e.GET("/messages", h.queryMessages)
 
 	port, ok := os.LookupEnv("PORT")
 	if !ok {
