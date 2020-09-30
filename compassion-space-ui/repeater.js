@@ -12,11 +12,11 @@ $(document).ready(function(){
           if (person === "01234567")
           {
             from = "You";
-            picture = "../compassion-space-ui/images/profile.jpg";
+            picture = "../images/profile.jpg";
           }
           else {
             from = data[val].from;
-            picture = "../compassion-space-ui/images/larpo.png";
+            picture = "../images/larpo.png";
           }
           if (data[val].message.content_url != null) {
             $(".message-container").append("<div class='media text-muted pt-3'><img class='mr-3 rounded shadow-sm' src='"+picture+"' width='32' height='32'><p class='media-body pb-3 mb-0 small lh-125 border-bottom border-gray'><strong>"+from+"</strong><br>"+data[val].message.text.english+"<br><img class='mr-3 shadow-sm' src='"+data[val].message.content_url+"' width='100' height='100'></p></div>");
