@@ -42,9 +42,6 @@ func (h *handler) storeMessage(c echo.Context) error {
 		return err
 	}
 
-	c.Logger().Debugj(map[string]interface{}{
-		"messages": messages,
-	})
 	return c.JSON(http.StatusCreated, msg)
 }
 
