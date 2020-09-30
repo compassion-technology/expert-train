@@ -22,6 +22,18 @@ func main() {
 
 	e.Use(middleware.CORS())
 	e.Use(middleware.Logger())
+	e.Use(middleware.BodyDump(func(c echo.Context, req []byte, resp []byte) {
+		if len(req) > 1000 {
+			req = req[:1000]
+		}
+		if len(resp) > 1000 {
+			resp = resp[:1000]
+		}
+		c.Logger().Printj(map[string]interface{}{
+			"req":  string(req),
+			"resp": string(resp),
+		})
+	}))
 
 	e.GET("/", healthCheck)
 
