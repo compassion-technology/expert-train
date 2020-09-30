@@ -10,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/aws/aws-sdk-go/service/translate"
 	"github.com/go-pg/pg/v9"
 	"github.com/google/uuid"
 )
@@ -19,6 +20,7 @@ type service interface {
 	getMessages(globalID string) ([]Message, error)
 	submitMessage(msg map[string]interface{}) (Message, error)
 	query(req queryRequest) ([]Message, error)
+	translateMessages(msgs []Message, target string) ([]Message, error)
 }
 
 type realService struct {
@@ -154,5 +156,46 @@ func (s *realService) query(req queryRequest) ([]Message, error) {
 	if err != nil {
 		return nil, err
 	}
+	return msgs, nil
+}
+
+func (s *realService) translateMessages(msgs []Message, target string) ([]Message, error) {
+	// The session the S3 Uploader will use
+	sess := session.Must(session.NewSession())
+
+	tr := translate.New(sess)
+
+	var msgsToUpdate []Message
+	for i := range msgs {
+		msg := msgs[i]
+		// does the translated value already exist?
+		if msg.Message[target] != nil {
+			continue
+		}
+
+		text, ok := msg.Message["text"].(map[string]interface{})
+		if !ok {
+			return nil, errors.New("could not parse text")
+		}
+
+		in, ok := text["source"].(string)
+		if !ok {
+			return nil, errors.New("message has no source text")
+		}
+		out, err := tr.Text(&translate.TextInput{
+			Text:               aws.String(in),
+			SourceLanguageCode: aws.String("auto"),
+			TargetLanguageCode: aws.String(target),
+		})
+		if err != nil {
+			return nil, err
+		}
+		msg.Message[target] = out.TranslatedText
+		msgs[i] = msg
+		msgsToUpdate = append(msgsToUpdate, msg)
+	}
+
+	go s.db.Update(&msgsToUpdate)
+
 	return msgs, nil
 }

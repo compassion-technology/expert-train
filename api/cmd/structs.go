@@ -25,4 +25,5 @@ type queryRequest struct {
 	MaximumMessageID *int    `query:"max"`
 	Skip             *int    `query:"skip"`
 	Take             *int    `query:"take"`
+	Language         *string `query:"lang"`
 }

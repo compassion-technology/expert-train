@@ -86,5 +86,81 @@ func (h *handler) queryMessages(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, msgs)
+
+	target := "en"
+	if validLanguage(req.Language) {
+		target = *req.Language
+	}
+
+	translated, err := h.svc.translateMessages(msgs, target)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, translated)
+}
+
+var validLanguages = map[string]struct{}{
+	"af":    {},
+	"sq":    {},
+	"am":    {},
+	"ar":    {},
+	"az":    {},
+	"bn":    {},
+	"bs":    {},
+	"bg":    {},
+	"zh":    {},
+	"zh-TW": {},
+	"hr":    {},
+	"cs":    {},
+	"da":    {},
+	"fa-AF": {},
+	"nl":    {},
+	"en":    {},
+	"et":    {},
+	"fi":    {},
+	"fr":    {},
+	"fr-CA": {},
+	"ka":    {},
+	"de":    {},
+	"el":    {},
+	"ha":    {},
+	"he":    {},
+	"hi":    {},
+	"hu":    {},
+	"id":    {},
+	"it":    {},
+	"ja":    {},
+	"ko":    {},
+	"lv":    {},
+	"ms":    {},
+	"no":    {},
+	"fa":    {},
+	"ps":    {},
+	"pl":    {},
+	"pt":    {},
+	"ro":    {},
+	"ru":    {},
+	"sr":    {},
+	"sk":    {},
+	"sl":    {},
+	"so":    {},
+	"es":    {},
+	"es-MX": {},
+	"sw":    {},
+	"sv":    {},
+	"tl":    {},
+	"ta":    {},
+	"th":    {},
+	"tr":    {},
+	"uk":    {},
+	"ur":    {},
+	"vi":    {},
+}
+
+func validLanguage(lang *string) bool {
+	if lang == nil {
+		return false
+	}
+	_, ok := validLanguages[*lang]
+	return ok
 }
