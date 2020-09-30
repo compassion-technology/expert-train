@@ -15,6 +15,16 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
+    <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="../compassion-space-ui/font-awesome/css/all.css" rel="stylesheet">
+  <link href="../compassion-space-ui/font-awesome/css/solid.min.css" rel="stylesheet">
+  <link href="../compassion-space-ui/font-awesome/css/fontawesome.css" rel="stylesheet">
+
+
+
+
+
   <!--Bootstrap JS-->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
     integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
@@ -87,7 +97,7 @@
         Sponsored Child/Children
         <span class="badge badge-pill bg-light align-text-bottom">2</span>
       </a>
-      <a class="nav-link" href="#">Letters</a>
+      <a class="nav-link" href="letters.html">Letters</a>
       <a class="nav-link" href="media.html">Media</a>
       <a class="nav-link" href="#">Help</a>
     </nav>
@@ -129,12 +139,39 @@
           </div>
           <div class="message-container"><div class="text-center">
           </div></div>
-          <div class="input-group">
-            <textarea class="form-control message" aria-label="With textarea"></textarea>
-            <div class="input-group-append">
-              <button type="button" class="btn btn-primary btn-md send">Send</button>
-            </div>
-          </div>
+
+          <div class="text-container" style="padding-bottom:2em;">
+            <div contentEditable="true" class="message-area border border-gray" style="width:100%; padding:1em"></div>
+          </div> 
+          <button type="button" class="btn btn-primary btn-md send" style="width: 100%; margin-bottom:2em;">Send</button>     
+          <br>
+         <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+  Attach image
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Upload image</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="file-upload-wrapper">
+          <input type="file" id="input-file-now" class="file-upload" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary post">Post image</button>
+      </div>
+    </div>
+  </div>
+</div>
                       <small class="d-block text-right mt-3">
               <a href="#">All messages</a>
             </small>
