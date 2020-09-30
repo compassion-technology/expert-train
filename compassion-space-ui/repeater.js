@@ -30,25 +30,38 @@ $(document).ready(function () {
     $(".container-sub").show();
   });
   $(".send").click(function () {
-
-    $.post( "https://jsonplaceholder.typicode.com/posts", { 
-      "group_id":123,
-      "text": {
-          "amharic": "ከእርስዎ ለመስማት በጣም ጥሩ ነው! ከሚስትዎ ቀዶ ጥገና ጋር ሁሉም ነገር በጥሩ ሁኔታ እየጸለይኩ ነው!",
-          "english": "Priya's awesome test"
-      },
-      "content": {
-          "type": "jpg",
-          "data": "{{base64 encoded file bytes}}"
+    var someData = {
+          group_id:123,
+          text: {
+              "amharic": "ከእርስዎ ለመስማት በጣም ጥሩ ነው! ከሚስትዎ ቀዶ ጥገና ጋር ሁሉም ነገር በጥሩ ሁኔታ እየጸለይኩ ነው!",
+              "english": "So great to hear from you! I am praying everything goes well with your wife's surgery!"
+          }
       }
-    })
-    .done(function( data ) {
-      alert( "Data Loaded: " + data );
-    });
-    // var message = $.trim($(".message").val());
-    // $(".message").val('');
-    // $(".image-conatiner").remove();
-
+    var stringyfiedData = JSON.stringify(someData)
+    var saveData = $.ajax({
+      type: 'POST',
+      contentType: "application/json",
+      url: "http://ec2co-ecsel-6n3bncmeboii-471081296.us-east-2.elb.amazonaws.com/user/01234567/message",
+      data: stringyfiedData,
+      success: function(resultData) { 
+        alert("Save Complete") 
+      }
+});
+    // $.post("http://ec2co-ecsel-6n3bncmeboii-471081296.us-east-2.elb.amazonaws.com/user/01234567/message",
+    // {
+    // //     group_id:123,
+    // //     text: {
+    // //         "amharic": "ከእርስዎ ለመስማት በጣም ጥሩ ነው! ከሚስትዎ ቀዶ ጥገና ጋር ሁሉም ነገር በጥሩ ሁኔታ እየጸለይኩ ነው!",
+    // //         "english": "So great to hear from you! I am praying everything goes well with your wife's surgery!"
+    // //     },
+    // //     content: {
+    // //         type: "jpg",
+    // //         data: "{{base64 encoded file bytes}}"
+    // //     }
+    // // },
+    // // function(data,status){
+    // //   alert("Data: " + data + "\nStatus: " + status);
+    // // });
   });
   $(".post").click(function () {
     var url = $(".file-upload").val();
