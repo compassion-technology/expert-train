@@ -37,6 +37,11 @@ func (h *handler) storeMessage(c echo.Context) error {
 		return err
 	}
 
+	c.Logger().Infoj(map[string]interface{}{
+		"from":     rawMSG["from"],
+		"to":       rawMSG["to"],
+		"group_id": rawMSG["group_id"],
+	})
 	msg, err := h.svc.submitMessage(rawMSG)
 	if err != nil {
 		return err
