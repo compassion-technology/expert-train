@@ -182,6 +182,14 @@ func (s *realService) translateMessages(msgs []Message, target string) ([]Messag
 		if !ok {
 			return nil, errors.New("message has no source text")
 		}
+
+		if len(in) == 0 {
+			// this is just a media post, no need to translate
+			msg.Message[target] = ""
+			msgs[i] = msg
+			msgsToUpdate = append(msgsToUpdate, msg)
+			continue
+		}
 		out, err := tr.Text(&translate.TextInput{
 			Text:               aws.String(in),
 			SourceLanguageCode: aws.String("auto"),
