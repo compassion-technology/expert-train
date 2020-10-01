@@ -43,7 +43,7 @@ $(document).ready(function () {
    getBase64Image(imagepath);
     postMessages(groupId,text,base64);
     document.getElementById('message-area').innerText = "";
-    getLastMessage(groupId,text);
+    getLastMessage(groupId,text, imagepath);
     $(".image-container").remove();
   });
 
@@ -126,17 +126,22 @@ startButton.addEventListener("click", function() {
 }, false);
 });
 
-function getLastMessage(groupId, text) {
+function getLastMessage(groupId, text, imagepath) {
       var from = "You";
       var picture = "../compassion-space-ui/images/profile.jpg";
-      $(".message-container").append("<div class='media text-muted pt-3'><img class='mr-3 rounded shadow-sm' src='" + picture + "' width='32' height='32'><p class='media-body pb-3 mb-0 small lh-125 border-bottom border-gray'><strong class='d-block text-gray-dark'>" + from + "</strong>" + text + "</p></div>");
+      if(imagepath){
+        $(".message-container").append("<div class='media text-muted pt-3'><img class='mr-3 rounded shadow-sm' src='" + picture + "' width='32' height='32'><p class='media-body pb-3 mb-0 small lh-125 border-bottom border-gray'><strong>" + from + "</strong><br>" + text + "<br><img class='mr-3 shadow-sm' src='" + imagepath + "' width='100' height='100'></p></div>");
+      }
+      else {
+        $(".message-container").append("<div class='media text-muted pt-3'><img class='mr-3 rounded shadow-sm' src='" + picture + "' width='32' height='32'><p class='media-body pb-3 mb-0 small lh-125 border-bottom border-gray'><strong class='d-block text-gray-dark'>" + from + "</strong>" + text + "</p></div>");
+      }
 }
 
 function getMessages(groupId) {
   $.getJSON("http://ec2co-ecsel-6n3bncmeboii-471081296.us-east-2.elb.amazonaws.com/messages?take=5&group="+groupId+"", function (data) {
-    data.sort(function(a,b) {
-      return (a.data[val].message.created - b.data[val].message.created);
-    });
+    // data.sort(function(a,b) {
+    //   return (a.data[val].created - b.data[val].created);
+    // });
     $.each(data, function (val) {
       var person = data[val].from;
       var from = "";
@@ -149,13 +154,13 @@ function getMessages(groupId) {
         from = data[val].from;
         picture = "../compassion-space-ui/images/larpo.png";
       }
-      var content_url = data[val].message.content_url;
+      var content_url = data[val].content_url;
       if (content_url) {
-        $(".message-container").append("<div class='media text-muted pt-3'><img class='mr-3 rounded shadow-sm' src='" + picture + "' width='32' height='32'><p class='media-body pb-3 mb-0 small lh-125 border-bottom border-gray'><strong>" + from + "</strong><br>" + data[val].message.text.source + "<br><img class='mr-3 shadow-sm' src='" + data[val].message.content_url + "' width='100' height='100'></p></div>");
-        console.log(data[val].message.content_url);
+        $(".message-container").append("<div class='media text-muted pt-3'><img class='mr-3 rounded shadow-sm' src='" + picture + "' width='32' height='32'><p class='media-body pb-3 mb-0 small lh-125 border-bottom border-gray'><strong>" + from + "</strong><br>" + data[val].message.en + "<br><img class='mr-3 shadow-sm' src='" + data[val].content_url + "' width='100' height='100'></p></div>");
+        console.log(data[val].content_url);
       }
       else {
-        $(".message-container").append("<div class='media text-muted pt-3'><img class='mr-3 rounded shadow-sm' src='" + picture + "' width='32' height='32'><p class='media-body pb-3 mb-0 small lh-125 border-bottom border-gray'><strong class='d-block text-gray-dark'>" + from + "</strong>" + data[val].message.text.source + "</p></div>");
+        $(".message-container").append("<div class='media text-muted pt-3'><img class='mr-3 rounded shadow-sm' src='" + picture + "' width='32' height='32'><p class='media-body pb-3 mb-0 small lh-125 border-bottom border-gray'><strong class='d-block text-gray-dark'>" + from + "</strong>" + data[val].message.en + "</p></div>");
       }
     });
   });
@@ -163,12 +168,17 @@ function getMessages(groupId) {
 
 async function postMessages(groupId, text) {
   var encodedUrl = await getBase64Image();
+  var commaSeparated = encodedUrl.split(',');
+  var actual = commaSeparated[commaSeparated.length - 1]
     var someData = {
         "group_id":groupId,
         "text": {
             "source": text
         },
-        "content_url": encodedUrl
+        "content": {
+          "type": "jpg",
+          "data": actual
+      }
       }
     var stringyfiedData = JSON.stringify(someData)
     var saveData = $.ajax({
