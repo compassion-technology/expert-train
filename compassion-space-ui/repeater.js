@@ -149,11 +149,11 @@ function getMessages(groupId) {
       var picture = "";
       if (person === "01234567") {
         from = "You";
-        picture = "../compassion-space-ui/images/profile.jpg";
+        picture = "https://previews.123rf.com/images/arekmalang/arekmalang1207/arekmalang120700008/14383125-a-shot-of-a-smiling-confident-asian-indian-businesswoman-outdoor.jpg";
       }
       else {
         from = data[val].from;
-        picture = "../compassion-space-ui/images/larpo.png";
+        picture = "https://us.123rf.com/450wm/borgogniels/borgogniels1802/borgogniels180200002/95510792-little-native-african-boy-standing-outdoors-under-the-rain.jpg?ver=6";
       }
       var content_url = data[val].content_url;
       if (content_url) {
