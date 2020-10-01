@@ -109,3 +109,6 @@ video {
   clear: both;
   padding-top: 10px;
 }
+.highlight {
+  color:black;
+}

@@ -76,9 +76,8 @@
           <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true"
             aria-expanded="false">Settings</a>
           <div class="dropdown-menu" aria-labelledby="dropdown01">
-            <a class="dropdown-item" href="#">Set Notifications</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something else here</a>
+            <a id="beneficiary" class="dropdown-item view" href="#">Beneficiary View</a>
+            <a id="sponsor" class="dropdown-item view" href="#">Sponsor View</a>
           </div>
         </li>
       </ul>
@@ -93,10 +92,6 @@
     <nav class="nav nav-underline">
       <a class="nav-link" href="home.html">Home</a>
       <a class="nav-link active" href="index.html">Messages</a>
-      <a class="nav-link" href="#">
-        Sponsored Child/Children
-        <span class="badge badge-pill bg-light align-text-bottom">2</span>
-      </a>
       <a class="nav-link" href="letters.html">Letters</a>
       <a class="nav-link" href="media.html">Media</a>
       <a class="nav-link" href="#">Help</a>
@@ -109,19 +104,19 @@
       <div class="col-md-4 container">
         <div class="my-3 p-3 bg-white rounded shadow-sm">
           <h6 class="border-bottom border-gray pb-2 mb-0">Conversations</h6>
-          <div class="media text-muted pt-3" id="123">
-            <img class="mr-3 rounded shadow-sm" src="../compassion-space-ui/images/larpo.png" alt="" width="48"
+          <div class="media text-muted pt-3" id="1">
+            <img class="mr-3 rounded shadow-sm" src="https://us.123rf.com/450wm/borgogniels/borgogniels1802/borgogniels180200002/95510792-little-native-african-boy-standing-outdoors-under-the-rain.jpg?ver=6" alt="" width="48"
               height="48">
-            <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+            <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray larpo">
               <strong class="d-block text-gray-dark">Group for Larpo</strong>
               Larpo's Birthday: 06/29/2014
               Country: Togo
             </p>
           </div>
           <div class="media text-muted pt-3" id= "456">
-            <img class="mr-3 rounded shadow-sm" src="../compassion-space-ui/images/etoname.png" alt="" width="48"
+            <img class="mr-3 rounded shadow-sm" src="https://everything-voluntary.com/wp-content/uploads/2018/11/africankid.jpg" alt="" width="48"
               height="48">
-            <p class="media-body pb-3 mb-0 small lh-125 border-gray">
+            <p class="media-body pb-3 mb-0 small lh-125 border-gray etonome">
               <strong class="d-block text-gray-dark">Group for Etoname</strong>
               Etonome's Birthday: 06/29/2014
               Country: Togo
@@ -152,6 +147,7 @@
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#recordModal">
   Attach Recording
 </button>
+<div id="imgTest"></div>
 
 <!-- Modal -->
 <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
