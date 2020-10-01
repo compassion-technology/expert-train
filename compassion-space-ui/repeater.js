@@ -39,9 +39,7 @@ $(document).ready(function () {
     if ($("#image-container").length != 0){
       imagepath = document.getElementById('image-container').innerText;
     }
-   var base64 = "";
-   getBase64Image(imagepath);
-    postMessages(groupId,text,base64);
+    postMessages(groupId,text,imagepath);
     document.getElementById('message-area').innerText = "";
     getLastMessage(groupId,text, imagepath);
     $(".image-container").remove();
@@ -127,21 +125,24 @@ startButton.addEventListener("click", function() {
 });
 
 function getLastMessage(groupId, text, imagepath) {
-      var from = "You";
-      var picture = "../compassion-space-ui/images/profile.jpg";
-      if(imagepath){
-        $(".message-container").append("<div class='media text-muted pt-3'><img class='mr-3 rounded shadow-sm' src='" + picture + "' width='32' height='32'><p class='media-body pb-3 mb-0 small lh-125 border-bottom border-gray'><strong>" + from + "</strong><br>" + text + "<br><img class='mr-3 shadow-sm' src='" + imagepath + "' width='100' height='100'></p></div>");
-      }
-      else {
-        $(".message-container").append("<div class='media text-muted pt-3'><img class='mr-3 rounded shadow-sm' src='" + picture + "' width='32' height='32'><p class='media-body pb-3 mb-0 small lh-125 border-bottom border-gray'><strong class='d-block text-gray-dark'>" + from + "</strong>" + text + "</p></div>");
-      }
+
+      // var from = "You";
+      // var picture = "../compassion-space-ui/images/profile.jpg";
+      // if(imagepath){
+      //   $(".message-container").append("<div class='media text-muted pt-3'><img class='mr-3 rounded shadow-sm' src='" + picture + "' width='32' height='32'><p class='media-body pb-3 mb-0 small lh-125 border-bottom border-gray'><strong>" + from + "</strong><br>" + text + "<br><img class='mr-3 shadow-sm' src='" + imagepath + "' width='100' height='100'></p></div>");
+      // }
+      // else {
+      //   $(".message-container").append("<div class='media text-muted pt-3'><img class='mr-3 rounded shadow-sm' src='" + picture + "' width='32' height='32'><p class='media-body pb-3 mb-0 small lh-125 border-bottom border-gray'><strong class='d-block text-gray-dark'>" + from + "</strong>" + text + "</p></div>");
+      // }
 }
 
 function getMessages(groupId) {
   $.getJSON("http://ec2co-ecsel-6n3bncmeboii-471081296.us-east-2.elb.amazonaws.com/messages?take=5&group="+groupId+"", function (data) {
-    // data.sort(function(a,b) {
-    //   return (a.data[val].created - b.data[val].created);
-    // });
+    data.sort(function(a,b) {
+      var acreated = new Date(a.created);
+      var bcreated = new Date(b.created);
+      return (acreated - bcreated);
+    });
     $.each(data, function (val) {
       var person = data[val].from;
       var from = "";
@@ -157,7 +158,6 @@ function getMessages(groupId) {
       var content_url = data[val].content_url;
       if (content_url) {
         $(".message-container").append("<div class='media text-muted pt-3'><img class='mr-3 rounded shadow-sm' src='" + picture + "' width='32' height='32'><p class='media-body pb-3 mb-0 small lh-125 border-bottom border-gray'><strong>" + from + "</strong><br>" + data[val].message.en + "<br><img class='mr-3 shadow-sm' src='" + data[val].content_url + "' width='100' height='100'></p></div>");
-        console.log(data[val].content_url);
       }
       else {
         $(".message-container").append("<div class='media text-muted pt-3'><img class='mr-3 rounded shadow-sm' src='" + picture + "' width='32' height='32'><p class='media-body pb-3 mb-0 small lh-125 border-bottom border-gray'><strong class='d-block text-gray-dark'>" + from + "</strong>" + data[val].message.en + "</p></div>");
@@ -166,17 +166,27 @@ function getMessages(groupId) {
   });
 }
 
-async function postMessages(groupId, text) {
-  var encodedUrl = await getBase64Image();
-  var commaSeparated = encodedUrl.split(',');
-  var actual = commaSeparated[commaSeparated.length - 1]
+async function postMessages(groupId, text, imagepath) {
+  var actual = "";
+  var type = "";
+  if (imagepath != ""){
+    var encodedUrl = await getBase64Image();
+    var commaSeparated = encodedUrl.split(',');
+    actual = commaSeparated[commaSeparated.length - 1]
+    type = "jpg";
+  }
+  else {
+    actual = "";
+    type = "";
+  }
+
     var someData = {
         "group_id":groupId,
         "text": {
             "source": text
         },
         "content": {
-          "type": "jpg",
+          "type": type,
           "data": actual
       }
       }
@@ -192,24 +202,6 @@ async function postMessages(groupId, text) {
     });
 }
 
-// function getBase64Image() {
-//   var filesSelected = document.getElementById("input-file-now").files;
-//     if (filesSelected.length > 0) {
-//       var fileToLoad = filesSelected[0];
-
-//       var fileReader = new FileReader();
-
-//       fileReader.onload = function(fileLoadedEvent) {
-//         var srcData = fileLoadedEvent.target.result; // <--- data: base64
-
-//         var newImage = document.createElement('img');
-//         newImage.src = srcData;
-
-//         document.getElementById("imgTest").innerHTML = newImage.outerHTML;
-//       }
-//       fileReader.readAsDataURL(fileToLoad);
-//     }
-// }
 const getBase64Image=() => new Promise(resolve => {
   var filesSelected = document.getElementById("input-file-now").files;
   var fileToLoad = filesSelected[0];
