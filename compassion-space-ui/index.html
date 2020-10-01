@@ -146,16 +146,19 @@
           <button type="button" class="btn btn-primary btn-md send" style="width: 100%; margin-bottom:2em;">Send</button>     
           <br>
          <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#imageModal">
   Attach image
+</button>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#recordModal">
+  Attach Recording
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Upload image</h5>
+        <h5 class="modal-title" id="imageModalLabel">Upload image</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -168,6 +171,44 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary post">Post image</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="recordModal" role="dialog" aria-labelledby="recordModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="left">
+          <div id="startButton" class="recButton btn btn-primary">
+            Start
+          </div>
+          <h5 style="text-align: center;">Preview</h5>
+          <video id="preview" width="200" height="200" autoplay muted></video>
+        </div>
+        <div class="right">
+          <div id="stopButton" class="recButton btn btn-primary">
+            Stop
+          </div>
+          <h5 style="text-align: center;">Recording</h5>
+          <video id="recording" width="200" height="200" controls></video>
+          <a id="downloadButton" class="recButton btn btn-primary">
+            Download
+          </a>
+        </div>
+        <div class="bottom">
+          <pre id="log"></pre>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary post">Post recording</button>
       </div>
     </div>
   </div>
